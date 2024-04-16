@@ -1,7 +1,7 @@
 # WHAT IS THIS REPOSITORY FOR
 This repository contains some python scripts that allow you to perform some useful operations on opensearch instances on AWS. I created it as a result of a request to migrate from an ElasticSearch to an OpenSearch. Please let me know if there are any problems.
 
-**Be careful: ** an OpenSearch/ElasticSearch instance inside a VPC could not be unreachable from your PC, so you shall use a *bastion-host* in the same subnet & VPC of the instance, and execute the commands from there.
+**Be careful:** an OpenSearch/ElasticSearch instance inside a VPC could not be unreachable from your PC, so you shall use a *bastion-host* in the same subnet & VPC of the instance, and execute the commands from there.
 
 
 # ENVIRONMENT PREPARATION TO RUN THESE SCRIPTS
