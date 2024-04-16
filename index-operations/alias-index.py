@@ -3,7 +3,7 @@ import requests
 from requests_aws4auth import AWS4Auth
 
 # EDIT THESE -- Host & Region
-host = 'https://vpc-mdb-stg-opensearch-updated-dgexkhczyb3cr6sa4udwvwzy3i.eu-west-1.es.amazonaws.com' # domain endpoint
+host = 'https://DOMAIN' # domain endpoint
 region = 'eu-west-1' # e.g. us-west-1
 
 
@@ -21,8 +21,8 @@ payload = {
     "actions": [
         {
             "add": {
-                "index": "clxmiddleware_assets_2020-01-10-04-35-36-reindexed",
-                "alias": "clxmiddleware_assets_2020-01-10-04-35-36"
+                "index": "INDEXNAME-reindexed",
+                "alias": "INDEXNAME"
             }
         }
     ]

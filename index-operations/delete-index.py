@@ -3,7 +3,7 @@ import requests
 from requests_aws4auth import AWS4Auth
 
 # EDIT THESE -- Host & Region
-host = 'https://vpc-mdb-stg-opensearch-updated-dgexkhczyb3cr6sa4udwvwzy3i.eu-west-1.es.amazonaws.com' # domain endpoint
+host = 'https://DOMAIN' # domain endpoint
 region = 'eu-west-1' # e.g. us-west-1
 
 
@@ -14,7 +14,7 @@ awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, region, 'es',
 # Deletes an index
 # -------------------------------
 
-path = '/clxmiddleware_assets_2022-10-06-03-31-46'
+path = '/INDEXNAME'
 url = host + path
 
 r = requests.delete(url, auth=awsauth)

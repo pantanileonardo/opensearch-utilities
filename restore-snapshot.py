@@ -3,7 +3,7 @@ import requests
 from requests_aws4auth import AWS4Auth
 
 # EDIT THESE -- Host & Region
-host = 'https://vpc-mdb-stg-opensearch-updated-dgexkhczyb3cr6sa4udwvwzy3i.eu-west-1.es.amazonaws.com' # domain endpoint
+host = 'https://DOMAIN' # domain endpoint
 region = 'eu-west-1' # e.g. us-west-1
 es_repository_name = 'snapshots'
 s3_snapshot_name = 'snapshot-2024-04-16-os1.3' # only lowercase characters allowed
