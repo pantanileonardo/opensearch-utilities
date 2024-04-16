@@ -2,36 +2,38 @@ import boto3
 import requests
 from requests_aws4auth import AWS4Auth
 
-# Configurazione
-host = 'https://vpc-mdb-stg-opensearch-updated-dgexkhczyb3cr6sa4udwvwzy3i.eu-west-1.es.amazonaws.com' # Endpoint del dominio
-region = 'eu-west-1' # Per esempio eu-west-1
-service = 'es'
+# COMPILE -- Host & Region
+host = 'https://vpc-mdb-stg-opensearch-updated-dgexkhczyb3cr6sa4udwvwzy3i.eu-west-1.es.amazonaws.com' # domain endpoint
+region = 'eu-west-1' # e.g. us-west-1
 
-# Autenticazione AWS
+
+# DO NOT EDIT
 credentials = boto3.Session().get_credentials()
-awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, region, service, session_token=credentials.token)
+awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, region, 'es', session_token=credentials.token)
+# -------------------------------
+# The following code does the following operations:
+# 1. gets the list of all indices (get_indices)
+# 2. for every index copies its settings & mappings (reindex_indices -> get_mappings_and_settings)
+# 3. creates a new index and copies in it the previous settings & mappings (reindex_indices -> create_new_index)
+# 4. reindexes the previous indexes in the new ones while keeping the old
+#
+# Note: these operations can be costly and require some time.
+# -------------------------------
 
-# Funzione per ottenere gli indici da OpenSearch
 def get_indices(host, awsauth):
-    # Endpoint per ottenere gli indici
     url = host + '/_cat/indices?v&format=json'
-    
-    # Esegui la richiesta GET
     response = requests.get(url, auth=awsauth)
 
-    # Controlla se la richiesta è riuscita
     if response.status_code == 200:
         indices_info = response.json()
         indices_list = [index['index'] for index in indices_info]
         return indices_list
     else:
-        # Gestire la risposta se non riuscita
         print("Error:", response.status_code)
         return []
 
-# Funzione per ottenere settings e mappings del vecchio indice
+
 def get_mappings_and_settings(host, awsauth, old_index):
-    # Ottenere le impostazioni
     settings_url = host + f'/{old_index}/_settings'
     settings_response = requests.get(settings_url, auth=awsauth)
 
@@ -39,25 +41,19 @@ def get_mappings_and_settings(host, awsauth, old_index):
         data = settings_response.json()
         index_settings = data[old_index]["settings"]["index"]
 
-        # Rimuovere i campi "uuid", "number_of_replicas", "version", "creation_date" e "provided_name" dalle impostazioni dell'indice
         index_settings.pop("uuid", None)
         index_settings.pop("number_of_replicas", None)
         index_settings.pop("version", None)
-        index_settings.pop("creation_date", None)
-        index_settings.pop("provided_name", None)
     else:
-        # Gestire la risposta se non riuscita
         print(f"Error {settings_response.status_code} while getting settings for '{old_index}'")
         return None, None
     
-    # Ottenere le mappature
     mappings_url = host + f'/{old_index}/_mappings'
     mappings_response = requests.get(mappings_url, auth=awsauth)
 
     if mappings_response.status_code == 200:
         mappings = mappings_response.json()[old_index]["mappings"]
     else:
-        # Gestire la risposta se non riuscita
         print(f"Error {mappings_response.status_code} while getting mappings for '{old_index}'")
         return None, None
 
@@ -65,12 +61,10 @@ def get_mappings_and_settings(host, awsauth, old_index):
 
 def create_new_index(host, awsauth, new_index, settings, mappings):
     url = host + f'/{new_index}'
-
     payload = {
         "settings": settings,
         "mappings": mappings
     }
-
     response = requests.put(url, auth=awsauth, json=payload)
 
     if response.status_code == 200:
@@ -83,7 +77,7 @@ def reindex_indices(host, awsauth, indices):
     for index_name in indices:
         path = '/_reindex'
         url = host + path
-        new_index_name = index_name + '-reindexed'  # Da adattare secondo la logica di naming desiderata
+        new_index_name = index_name + '-reindexed'  # EDIT THIS
 
         settings, mappings = get_mappings_and_settings(host, awsauth, index_name)
         if settings is None or mappings is None:

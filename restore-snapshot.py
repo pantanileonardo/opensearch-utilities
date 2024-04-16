@@ -2,17 +2,23 @@ import boto3
 import requests
 from requests_aws4auth import AWS4Auth
 
-host = 'https://vpc-mdb-stg-opensearch-v3-dikvwrnkd4vlgszj2qv4b3tk3q.eu-west-1.es.amazonaws.com' # domain endpoint
+# EDIT THESE -- Host & Region
+host = 'https://vpc-mdb-stg-opensearch-updated-dgexkhczyb3cr6sa4udwvwzy3i.eu-west-1.es.amazonaws.com' # domain endpoint
 region = 'eu-west-1' # e.g. us-west-1
-service = 'es'
+es_repository_name = 'snapshots'
+s3_snapshot_name = 'snapshot-2024-04-16-os1.3' # only lowercase characters allowed
+
+# DO NOT EDIT
 credentials = boto3.Session().get_credentials()
-awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, region, service, session_token=credentials.token)
-
+awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, region, 'es', session_token=credentials.token)
+# -------------------------------
 # Restore snapshot (all indexes)
+# -------------------------------
 
-path = '/_snapshot/snapshots/snapshot-2024-04-16-os1.3/_restore' 
+path = '/_snapshot/'+es_repository_name+'/'+s3_snapshot_name+'/_restore' 
 url = host + path
 
+# EDIT THIS
 payload = {
   "indices": "*-reindexed,-.kibana*,-.opendistro_security,-.opendistro-*",
   "ignore_unavailable": "true",
