@@ -3,7 +3,7 @@ import requests
 from requests_aws4auth import AWS4Auth
 import json
 
-CONFIG_FILE_PATH = '../config.conf'
+CONFIG_FILE_PATH = '../settings.conf'
 
 # Function to read and validate configuration parameters
 def loadConfig(configFilePath):

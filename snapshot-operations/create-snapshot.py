@@ -4,7 +4,7 @@ from requests_aws4auth import AWS4Auth
 from datetime import datetime
 import json
 
-CONFIG_FILE_PATH = '../config.conf'
+CONFIG_FILE_PATH = '../settings.conf'
 
 # Function to read and validate configuration parameters
 def loadConfig(configFilePath):
@@ -30,7 +30,7 @@ snapshotName = config['snapshot_name']
 
 # Get current date and time
 currentDatetime = datetime.now()
-formattedDatetime = currentDatetime.strftime("%Y-%m-%d %H-%M")
+formattedDatetime = currentDatetime.strftime("%Y-%m-%d-%H-%M")
 
 # AWS credentials
 credentials = boto3.Session().get_credentials()
