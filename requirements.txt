@@ -1,3 +1,4 @@
 boto3
 requests
 requests_aws4auth
+json
