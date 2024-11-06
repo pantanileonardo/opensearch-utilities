@@ -44,6 +44,8 @@ def get_mappings_and_settings(host, awsauth, old_index):
         index_settings.pop("uuid", None)
         index_settings.pop("number_of_replicas", None)
         index_settings.pop("version", None)
+        index_settings.pop("creation_date", None)
+        index_settings.pop("provided_name", None)
     else:
         print(f"Error {settings_response.status_code} while getting settings for '{old_index}'")
         return None, None
